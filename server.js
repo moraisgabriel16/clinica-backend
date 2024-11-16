@@ -13,7 +13,7 @@ app.use(cors()); // Permite que o frontend se conecte ao backend
 app.use(bodyParser.json()); // Permite processar requisições JSON
 
 // Conexão com o MongoDB
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/clinica';
+const mongoURI = process.env.MONGO_URI || 'mongodb+srv://odonto1:gaga123@odonto.lyz0z.mongodb.net/clinica?retryWrites=true&w=majority';
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
