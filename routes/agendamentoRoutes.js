@@ -10,7 +10,7 @@ const router = express.Router();
 // Rota para criar um novo agendamento
 router.post('/', async (req, res) => {
   try {
-    const { pacienteId, dentistaId, procedimentoId, dataHora, observacoes } = req.body;
+    const { pacienteId, dentistaId, procedimentoId, dataHora, duracao, observacoes } = req.body;
 
     // Verificar se o paciente, dentista e procedimento existem
     const paciente = await Paciente.findById(pacienteId);
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ message: 'Procedimento não encontrado' });
     }
 
-    const novoAgendamento = new Agendamento({ pacienteId, dentistaId, procedimentoId, dataHora, observacoes });
+    const novoAgendamento = new Agendamento({ pacienteId, dentistaId, procedimentoId, dataHora, duracao, observacoes });
     await novoAgendamento.save();
     res.status(201).json(novoAgendamento);
   } catch (error) {
@@ -71,7 +71,7 @@ router.get('/:id', async (req, res) => {
 // Rota para atualizar um agendamento pelo ID
 router.put('/:id', async (req, res) => {
   try {
-    const { pacienteId, dentistaId, procedimentoId, dataHora, observacoes } = req.body;
+    const { pacienteId, dentistaId, procedimentoId, dataHora, duracao, observacoes } = req.body;
 
     // Verificar se o paciente, dentista e procedimento existem
     const paciente = await Paciente.findById(pacienteId);
@@ -91,7 +91,7 @@ router.put('/:id', async (req, res) => {
 
     const agendamentoAtualizado = await Agendamento.findByIdAndUpdate(
       req.params.id,
-      { pacienteId, dentistaId, procedimentoId, dataHora, observacoes },
+      { pacienteId, dentistaId, procedimentoId, dataHora, duracao, observacoes },
       { new: true, runValidators: true }
     ).populate('pacienteId', 'nome_completo')
      .populate('dentistaId', 'nome')

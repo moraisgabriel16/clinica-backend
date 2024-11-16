@@ -20,6 +20,11 @@ const AgendamentoSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  duracao: {
+    type: Number, // Duração em minutos
+    required: true,
+    default: 60, // Valor padrão de 60 minutos, caso não seja especificado
+  },
   observacoes: {
     type: String,
     default: '',
