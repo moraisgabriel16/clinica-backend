@@ -2,18 +2,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-require('dotenv').config(); // Permite o uso de variáveis de ambiente
+require('dotenv').config(); // Carregar variáveis de ambiente do arquivo .env
 
 // Inicialização do servidor Express
 const app = express();
 
 // Middlewares
 app.use(cors()); // Permite que o frontend se conecte ao backend
-app.use(bodyParser.json()); // Permite processar requisições JSON
+app.use(express.json()); // Substitui bodyParser.json() para processar requisições JSON
 
 // Conexão com o MongoDB
 const mongoURI = process.env.MONGO_URI || 'mongodb+srv://odonto1:gaga123@odonto.lyz0z.mongodb.net/clinica?retryWrites=true&w=majority';
+
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,6 +23,15 @@ mongoose.connect(mongoURI, {
     console.error('Erro ao conectar ao MongoDB:', error);
     process.exit(1); // Encerra a aplicação caso a conexão falhe
   });
+
+// Evento de reconexão do mongoose
+mongoose.connection.on('disconnected', () => {
+  console.log('Conexão com o MongoDB perdida. Tentando reconectar...');
+  mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).catch((error) => console.error('Erro ao reconectar ao MongoDB:', error));
+});
 
 // Importação das rotas
 const pacienteRoutes = require('./routes/pacienteRoutes');
@@ -44,7 +53,7 @@ app.get('/', (req, res) => {
 });
 
 // Rota para tratar 404 (quando nenhuma rota é encontrada)
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).json({ message: 'Rota não encontrada' });
 });
 
