@@ -14,10 +14,7 @@ app.use(express.json()); // Substitui bodyParser.json() para processar requisiç
 // Conexão com o MongoDB
 const mongoURI = process.env.MONGO_URI || 'mongodb+srv://odonto1:gaga123@odonto.lyz0z.mongodb.net/clinica?retryWrites=true&w=majority';
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(mongoURI)
   .then(() => console.log('Conectado ao MongoDB'))
   .catch((error) => {
     console.error('Erro ao conectar ao MongoDB:', error);
@@ -27,10 +24,7 @@ mongoose.connect(mongoURI, {
 // Evento de reconexão do mongoose
 mongoose.connection.on('disconnected', () => {
   console.log('Conexão com o MongoDB perdida. Tentando reconectar...');
-  mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }).catch((error) => console.error('Erro ao reconectar ao MongoDB:', error));
+  mongoose.connect(mongoURI).catch((error) => console.error('Erro ao reconectar ao MongoDB:', error));
 });
 
 // Importação das rotas
